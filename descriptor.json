@@ -1,0 +1,15 @@
+{
+    "identifier": "com.enginelooper",
+    "name": "Engine Looper",
+    "vendor": "Engine Looper",
+    "description": "Advanced audio looper with BPM detection",
+    "version": "1.0.0",
+    "apiVersion": "2.0.0", 
+    "keywords": [ "Cmajor" ],
+    "isInstrument": true,
+    "hasMidiInput": false,
+    "hasMidiOutput": false,
+    "hasAudioInput": true,
+    "hasAudioOutput": true,
+    "website": ""
+}
