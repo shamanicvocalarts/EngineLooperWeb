@@ -35,68 +35,69 @@ export class ComponentManager {
         });
     }
 
-    async spawnComponent(type, componentConfig) {
-        if (!componentConfig) {
-            console.error(`Unknown component type: ${type}`);
-            return;
-        }
-    
-        const componentId = `${type}-${Date.now()}`;
-        const wrapper = document.createElement('div');
-        wrapper.dataset.componentInstance = componentId;
-        wrapper.style.position = 'absolute';
-        wrapper.style.left = '50px';
-        wrapper.style.top = '50px';
-        wrapper.style.width = '300px';
-        wrapper.style.height = '200px';
-        wrapper.style.left = `${50 - this.canvasOffset.x}px`;
-        wrapper.style.top = `${50 - this.canvasOffset.y}px`;
-    
-        let component;
-        switch (type) {
-            case 'waveform':
-                component = new Waveform();
-                break;
-            case 'meters':
-                component = new Meters();
-                break;
-            case 'buttongrid':
-                component = new ButtonGrid();
-                break;
-            case 'sliders':
-                component = new Sliders();
-                break;
-            case 'infopane':
-                component = new InfoPane();
-                break;
-            case 'modular':
-                component = new ModularComponent();
-                break;
-            default:
-                console.error(`Unsupported component type: ${type}`);
-                return;
-        }
-    
-        if (component) {
-            wrapper.classList.add('component-wrapper');
-            wrapper.appendChild(component);
-            this.mainContainer.appendChild(wrapper);
-    
-            this.components.set(componentId, {
-                element: wrapper,
-                type: type,
-                position: { x: 50, y: 50 }
-            });
-    
-            if (this.callbacks.getCurrentMode() === 'edit') {
-                this.makeDraggable(wrapper);
-                component.setAttribute('disabled', '');
-            }
-    
-            this.callbacks.onComponentsChanged();
-            return wrapper;
-        }
+// ComponentManager.js
+async spawnComponent(type, componentConfig, patchConnection) {
+    if (!componentConfig) {
+        console.error(`Unknown component type: ${type}`);
+        return;
     }
+
+    const componentId = `${type}-${Date.now()}`;
+    const wrapper = document.createElement('div');
+    wrapper.dataset.componentInstance = componentId;
+    wrapper.style.position = 'absolute';
+    wrapper.style.left = '50px';
+    wrapper.style.top = '50px';
+    wrapper.style.width = '300px';
+    wrapper.style.height = '200px';
+    wrapper.style.left = `${50 - this.canvasOffset.x}px`;
+    wrapper.style.top = `${50 - this.canvasOffset.y}px`;
+
+    let component;
+    switch (type) {
+        case 'waveform':
+            component = new Waveform(patchConnection);
+            break;
+        case 'meters':
+            component = new Meters(patchConnection);
+            break;
+        case 'buttongrid':
+            component = new ButtonGrid(patchConnection);
+            break;
+        case 'sliders':
+            component = new Sliders(patchConnection);
+            break;
+        case 'infopane':
+            component = new InfoPane(patchConnection);
+            break;
+        case 'modular':
+            component = new ModularComponent(patchConnection);
+            break;
+        default:
+            console.error(`Unsupported component type: ${type}`);
+            return;
+    }
+
+    if (component) {
+        wrapper.classList.add('component-wrapper');
+        wrapper.appendChild(component);
+        this.mainContainer.appendChild(wrapper);
+
+        this.components.set(componentId, {
+            element: wrapper,
+            type: type,
+            position: { x: 50, y: 50 }
+        });
+
+        if (this.callbacks.getCurrentMode() === 'edit') {
+            this.makeDraggable(wrapper);
+            component.setAttribute('disabled', '');
+        }
+
+        this.callbacks.onComponentsChanged();
+        return wrapper;
+    }
+}
 
     deleteComponent(id) {
         const component = this.components.get(id);

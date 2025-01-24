@@ -127,9 +127,9 @@ class EngineWindow extends HTMLElement {
         this.setupEventListeners();
     }
 
-    handleSpawnComponent(type) {
+    async handleSpawnComponent(type) {
         const componentConfig = componentRegistry.get(type);
-        this.componentManager.spawnComponent(type, componentConfig);
+        this.componentManager.spawnComponent(type, componentConfig, this.patchConnection);
     }
 
     setMode(mode) {
